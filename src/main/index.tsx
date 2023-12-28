@@ -1,7 +1,7 @@
 import React from 'react'
-import { Login } from '@/presentation/pages'
 import { createRoot } from 'react-dom/client'
+import Router from '@/presentation/components/router/router'
 
 createRoot(document.getElementById('main')).render(
-  <Login />
+  <Router />
 )
