@@ -1,3 +1,3 @@
-export const makeAPiUrl = (): string => {
-  return 'http://localhost:5050/api/login'
+export const makeAPiUrl = (path: string): string => {
+  return `${process.env.REACT_APP_API_URL}${path}`
 }
