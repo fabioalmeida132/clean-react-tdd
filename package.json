@@ -9,7 +9,7 @@
     "test:watch": "jest --watch",
     "test:staged": "jest --findRelatedTests --passWithNoTests",
     "test:ci": "jest -- --coverage",
-    "test:coveralls": "test:ci && coveralls < coverage/lcov.info",
+    "test:coveralls": "test:ci && cat ./coverage/lcov.info | coveralls",
     "prepare": "husky install"
   },
   "keywords": [],
