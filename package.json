@@ -8,8 +8,8 @@
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "jest --watch",
     "test:staged": "jest --findRelatedTests --passWithNoTests",
-    "test:ci": "jest -- --coverage",
-    "test:coveralls": "yarn test:ci && cat ./coverage/lcov.info | coveralls",
+    "test:ci": "jest --coverage",
+    "test:coveralls": "yarn test:ci && coveralls < ./coverage/lcov.info",
     "prepare": "husky install"
   },
   "keywords": [],
