@@ -114,7 +114,6 @@ describe('Login component', () => {
     const { sut } = makeSut()
 
     populateEmailField(sut)
-    const emailStatus = sut.getByTestId('email-status')
 
     testStatusForField(sut, 'email')
   })
@@ -198,7 +197,7 @@ describe('Login component', () => {
 
   test('Should present error if SaveAccessToken fails', async () => {
     const error = new InvalidCredentialsError()
-    const { sut, authenticationSpy, saveAccessTokenMock } = makeSut()
+    const { sut, saveAccessTokenMock } = makeSut()
     jest.spyOn(saveAccessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error))
     await simulateValidSubmit(sut)
 
@@ -207,7 +206,7 @@ describe('Login component', () => {
   })
 
   test('Should go to signup page', () => {
-    const { sut, authenticationSpy } = makeSut()
+    const { sut } = makeSut()
     const signup = sut.getByTestId('signup')
     fireEvent.click(signup)
     expect(history.length).toBe(2)
