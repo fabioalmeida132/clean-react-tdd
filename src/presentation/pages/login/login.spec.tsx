@@ -117,7 +117,7 @@ describe('Login component', () => {
     Helper.testButtonIsDisabled(sut, 'submit', false)
   })
 
-  test('Should enable submit button if form is invalid', async () => {
+  test('Should show spinner on submit', async () => {
     const { sut } = makeSut()
     await simulateValidSubmit(sut)
 
