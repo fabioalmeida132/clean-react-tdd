@@ -48,6 +48,7 @@ describe('Signup component', () => {
 
     Helper.testStatusForField(sut, 'name', validationError)
   })
+
   test('Should show email error if Validation fails', () => {
     const validationError = faker.lorem.words()
     const { sut } = makeSut({ validationError })
@@ -73,5 +74,38 @@ describe('Signup component', () => {
     Helper.populateField(sut, 'passwordConfirmation')
 
     Helper.testStatusForField(sut, 'passwordConfirmation', validationError)
+  })
+
+  test('Should show valid name state if Validation succeeds', () => {
+    const { sut } = makeSut()
+
+    Helper.populateField(sut, 'name')
+
+    Helper.testStatusForField(sut, 'name')
+  })
+
+  test('Should show valid email state if Validation succeeds', () => {
+    const { sut } = makeSut()
+
+    Helper.populateField(sut, 'email')
+
+    Helper.testStatusForField(sut, 'email')
+  })
+
+  test('Should show valid password state if Validation succeeds', () => {
+    const { sut } = makeSut()
+
+    Helper.populateField(sut, 'password')
+
+    Helper.testStatusForField(sut, 'password')
+  })
+
+  test('Should show valid passwordConfirmation state if Validation succeeds', () => {
+    const { sut } = makeSut()
+
+    Helper.populateField(sut, 'password')
+    Helper.populateField(sut, 'passwordConfirmation')
+
+    Helper.testStatusForField(sut, 'passwordConfirmation')
   })
 })
