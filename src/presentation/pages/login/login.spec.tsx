@@ -108,7 +108,7 @@ describe('Login component', () => {
     Helper.testStatusForField(sut, 'password')
   })
 
-  test('Should enable submit button if form is invalid', () => {
+  test('Should enable submit button if form is valid', () => {
     const { sut } = makeSut()
 
     Helper.populateField(sut, 'email')
