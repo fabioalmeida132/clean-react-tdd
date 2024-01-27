@@ -42,17 +42,25 @@ const Signup: React.FC<Props> = ({ validation, addAccount }: Props) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-    if (state.isLoading || formIsValid) return
-    setState({
-      ...state,
-      isLoading: true
-    })
-    await addAccount.add({
-      name: state.name,
-      email: state.email,
-      password: state.password,
-      passwordConfirmation: state.passwordConfirmation
-    })
+    try {
+      if (state.isLoading || formIsValid) return
+      setState({
+        ...state,
+        isLoading: true
+      })
+      await addAccount.add({
+        name: state.name,
+        email: state.email,
+        password: state.password,
+        passwordConfirmation: state.passwordConfirmation
+      })
+    } catch (error) {
+      setState({
+        ...state,
+        isLoading: false,
+        mainError: error.message
+      })
+    }
   }
 
   return (
@@ -66,7 +74,6 @@ const Signup: React.FC<Props> = ({ validation, addAccount }: Props) => {
           <Input type="password" name="password" placeholder="Digite sua senha"/>
           <Input type="password" name="passwordConfirmation" placeholder="Repita sua senha"/>
           <button data-testid="submit" disabled={formIsValid} className={Styles.submit} type="submit">Cadastrar</button>
-
           <span className={Styles.link}>Voltar para login</span>
           <FormStatus/>
         </form>
