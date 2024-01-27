@@ -4,6 +4,7 @@ import React from 'react'
 import { Helper, ValidationStub } from '@/presentation/test'
 import { faker } from '@faker-js/faker'
 import { AddAccountSpy } from '@/presentation/test/mock-add-acount'
+import { EmailInUseError } from '@/domain/errors'
 
 type SutTypes = {
   sut: RenderResult
@@ -40,6 +41,11 @@ const simulateValidSubmit = async (
   const form = sut.getByTestId('form')
   fireEvent.submit(form)
   await waitFor(() => form)
+}
+
+const testElementText = (sut: RenderResult, fieldName: string, text: string): void => {
+  const element = sut.getByTestId(fieldName)
+  expect(element.textContent).toBe(text)
 }
 
 describe('Signup component', () => {
@@ -159,7 +165,7 @@ describe('Signup component', () => {
     })
   })
 
-  test('Should call Authentication only once', async () => {
+  test('Should call AddAccount only once', async () => {
     const { sut, addAccountSpy } = makeSut()
     await simulateValidSubmit(sut)
     await simulateValidSubmit(sut)
@@ -167,12 +173,22 @@ describe('Signup component', () => {
     expect(addAccountSpy.callsCount).toBe(1)
   })
 
-  test('Should not call Authentication if form is invalid', () => {
+  test('Should not call AddAccount if form is invalid', () => {
     const validationError = faker.lorem.word()
     const { sut, addAccountSpy } = makeSut({ validationError })
     Helper.populateField(sut, 'email')
     fireEvent.submit(sut.getByTestId('form'))
 
     expect(addAccountSpy.callsCount).toBe(0)
+  })
+
+  test('Should present error if AddAccount fails', async () => {
+    const error = new EmailInUseError()
+    const { sut, addAccountSpy } = makeSut()
+    jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
+    await simulateValidSubmit(sut)
+
+    testElementText(sut, 'main-error', error.message)
+    Helper.testChildCount(sut, 'error-wrap', 1)
   })
 })
