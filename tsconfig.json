@@ -20,6 +20,8 @@
   },
   "include": [
     "src",
-    "node_modules/cypress/types/cypress-global-vars.d.ts"
+  ],
+  "exclude": [
+    "cypress.config.ts", "cypress", "node_modules"
   ]
 }

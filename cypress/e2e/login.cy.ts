@@ -1,5 +1,8 @@
 describe('Login', () => {
-  it('Should load with correct initial state', () => {
-    cy.visit('http://localhost:8080/login')
+  beforeEach(() => {
+    cy.visit('login')
+  })
+  it('should ', () => {
+    cy.getByTestId('email-status').should('have.attr', 'title', 'Campo obrigatório')
   })
 })
