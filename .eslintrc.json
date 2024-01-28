@@ -4,11 +4,14 @@
       "version": "detect"
     }
   },
-  "extends": ["standard-with-typescript", "plugin:react/recommended"],
+  "extends": ["standard-with-typescript", "plugin:react/recommended","plugin:cypress/recommended"],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["react"],
+  "env": {
+    "cypress/globals": true
+  },
+  "plugins": ["react", "cypress"],
   "rules": {
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
@@ -18,6 +21,12 @@
     "@typescript-eslint/require-await": "off",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "cypress/no-assigning-return-values": "error",
+    "cypress/no-unnecessary-waiting": "error",
+    "cypress/assertion-before-screenshot": "warn",
+    "cypress/no-force": "warn",
+    "cypress/no-async-tests": "error",
+    "cypress/no-pause": "error"
   }
 }
