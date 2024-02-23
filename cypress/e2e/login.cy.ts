@@ -1,8 +1,12 @@
 import { faker } from '@faker-js/faker'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function randomize (array: any[]) {
+  const index = Math.floor(Math.random() * array.length)
+  return array[index]
+}
+
 const baseUrl: string = Cypress.config().baseUrl
-const realEmail = Cypress.env('realEmail')
-const realPassword = Cypress.env('realPassword')
 describe('Login', () => {
   beforeEach(() => {
     cy.visit('login')
@@ -39,11 +43,32 @@ describe('Login', () => {
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
 
+  it('Should present error if Unexpected error', () => {
+    cy.intercept('POST', /login/, {
+      statusCode: randomize([400, 402, 403, 500]),
+      body: {
+        error: faker.lorem.sentence()
+      }
+    })
+
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(String(faker.internet.password()))
+    cy.getByTestId('submit').click()
+    cy.getByTestId('error-wrap')
+      .getByTestId('main-error').should('contain.text', 'Algo de errado aconteceu. Tente novamente em breve.')
+    cy.url().should('eq', `${baseUrl}/login`)
+  })
+
   it('Should present error if invalid credentials are provided', () => {
-    const password = faker.lorem.word(5)
-    const email = faker.internet.email()
-    cy.getByTestId('email').focus().type(email)
-    cy.getByTestId('password').focus().type(String(password))
+    cy.intercept('POST', /login/, {
+      statusCode: 401,
+      body: {
+        error: faker.lorem.sentence()
+      }
+    })
+
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(String(faker.internet.password()))
     cy.getByTestId('submit').click()
     cy.getByTestId('error-wrap')
       .getByTestId('main-error').should('contain.text', 'Credenciais inválidas')
@@ -51,10 +76,33 @@ describe('Login', () => {
   })
 
   it('Should save AccessToken if valid credentials are provided', () => {
-    cy.getByTestId('email').focus().type(realEmail)
-    cy.getByTestId('password').focus().type(String(realPassword))
+    cy.intercept('POST', /login/, {
+      statusCode: 200,
+      body: {
+        accessToken: faker.string.uuid()
+      }
+    })
+
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(String(faker.internet.password()))
     cy.getByTestId('submit').click()
     cy.url().should('eq', `${baseUrl}/`)
     cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
+  })
+
+  it('Should present error if invalid data returned', () => {
+    cy.intercept('POST', /login/, {
+      statusCode: 200,
+      body: {
+        invalidPropety: faker.string.uuid()
+      }
+    })
+
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(String(faker.internet.password()))
+    cy.getByTestId('submit').click()
+    cy.getByTestId('error-wrap')
+      .getByTestId('main-error').should('contain.text', 'Algo de errado aconteceu. Tente novamente em breve.')
+    cy.url().should('eq', `${baseUrl}/login`)
   })
 })
