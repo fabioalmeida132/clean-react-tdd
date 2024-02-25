@@ -75,7 +75,7 @@ describe('Login', () => {
     cy.url().should('eq', `${baseUrl}/login`)
   })
 
-  it('Should save AccessToken if valid credentials are provided', () => {
+  it('Should save AccessToken if valid credentials are provided on enter', () => {
     cy.intercept('POST', /login/, {
       statusCode: 200,
       body: {
@@ -84,8 +84,7 @@ describe('Login', () => {
     })
 
     cy.getByTestId('email').focus().type(faker.internet.email())
-    cy.getByTestId('password').focus().type(String(faker.internet.password()))
-    cy.getByTestId('submit').click()
+    cy.getByTestId('password').focus().type(String(faker.internet.password())).type('{enter}')
     cy.url().should('eq', `${baseUrl}/`)
     cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
   })
