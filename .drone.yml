@@ -1,9 +1,11 @@
 kind: pipeline
-name: hello-world
 type: docker
+name: default
 
 steps:
-  - name: say-hello
-    image: busybox
+  - name: install
+    image: node:21
     commands:
-     - echo hello-world
+      - npm install
+      - npm test
+     
