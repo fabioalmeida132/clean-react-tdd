@@ -3,9 +3,8 @@ type: docker
 name: default
 
 steps:
-  - name: install-yarn-and-dependencies
+  - name: install-dependencies-and-test
     image: node:21
     commands:
-      - npm install -g yarn
       - yarn install
       - yarn test
