@@ -1,13 +1,9 @@
 kind: pipeline
-name: default
-
-platform:
-  os: linux
-  arch: arm64
+name: hello-world
+type: docker
 
 steps:
-- name: test
-  image: node
-  commands:
-  - npm install
-  - npm test
+  - name: say-hello
+    image: busybox
+    commands:
+     - echo hello-world
