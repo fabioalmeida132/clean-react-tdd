@@ -6,8 +6,12 @@ dotenv.config();
 export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:8080',
-    setupNodeEvents (on, config) {
-      // implement node event listeners here
-    }
+    setupNodeEvents(on, config) {
+      on('task', {
+        log(message) {
+          console.log(message)
+          return null
+        },
+      })
   }
 })
