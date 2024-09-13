@@ -3,19 +3,10 @@ type: docker
 name: default
 
 steps:
-  - name: install-deps
-    image: node:21
-    commands:
-      - yarn install
-    cache:
-      key: node-modules-cache
-      paths:
-        - node_modules
-
   - name: run-cypress-tests
     image: cypress/included:13.14.2
     environment:
-      CYPRESS_baseUrl: http://server:8080 # O Cypress acessa o servidor pelo nome do serviço
+      CYPRESS_baseUrl: http://server:8080 # Cypress acessa o servidor pelo nome do serviço
     commands:
       - cypress run
     depends_on:
@@ -27,4 +18,5 @@ services:
     environment:
       PORT: 8080
     commands:
+      - yarn install # Instala as dependências antes de iniciar o servidor
       - yarn start
