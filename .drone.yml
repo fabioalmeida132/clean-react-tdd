@@ -12,22 +12,12 @@ steps:
       paths:
         - node_modules
 
-  - name: clear-cypress-cache
-    image: cypress/included:13.14.2
-    commands:
-      - rm -rf /root/.cache/Cypress # Remove o cache do Cypress antes de instalar novamente
-
-  - name: install-cypress
-    image: cypress/included:13.14.2
-    commands:
-      - cypress install # Garante que o binário do Cypress seja instalado corretamente
-
   - name: start-application
     image: node:21
     commands:
       - yarn start &
-      - sleep 30 # Espera 30 segundos para garantir que o servidor esteja rodando
-      - curl --retry 5 --retry-delay 5 --retry-connrefused http://localhost:8080 || echo "Failed to connect to server" # Tenta 5 vezes, com 5s entre tentativas
+      - sleep 60 # Espera 30 segundos para garantir que o servidor esteja rodando
+      - curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8080 || echo "Failed to connect to server" # Tenta 5 vezes, com 5s entre tentativas
       - echo "Server is running" # Exibe log de sucesso se a conexão funcionar
     environment:
       PORT: 8080
@@ -37,7 +27,7 @@ steps:
     environment:
       CYPRESS_baseUrl: http://localhost:8080
     commands:
-      - yarn run cypress run # Roda os testes do Cypress
+      - cypress run
 
 cache:
   paths:
