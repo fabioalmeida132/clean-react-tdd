@@ -9,6 +9,8 @@ steps:
       CYPRESS_baseUrl: http://server:8080
       REACT_APP_API_URL:
         from_secret: REACT_APP_API_URL
+      CYPRESS_screenshotsFolder: cypress/screenshots/${DRONE_BUILD_NUMBER}
+      CYPRESS_videosFolder: cypress/videos/${DRONE_BUILD_NUMBER}
     commands:
       - npx wait-on http://server:8080
       - cypress run
@@ -16,15 +18,34 @@ steps:
       - server
     artifacts:
       paths:
-        - cypress/screenshots/**/*
+        - cypress/screenshots/${DRONE_BUILD_NUMBER}/**
+        - cypress/videos/${DRONE_BUILD_NUMBER}/**
 
   - name: upload-screenshots
     image: plugins/s3
     settings:
       bucket: cypress
       region: us-east-1
-      source: cypress/screenshots/**/* 
-      target: /drone-screenshots/
+      source: cypress/screenshots/${DRONE_BUILD_NUMBER}/** 
+      target: /drone-screenshots/${DRONE_BUILD_NUMBER}/
+      access_key: 
+        from_secret: MINIO_ACCESS_KEY
+      secret_key: 
+        from_secret: MINIO_SECRET_KEY
+      endpoint: https://evolution-minio.geoq4d.easypanel.host
+      path_style: true
+    when:
+      status: [ success, failure ]
+    depends_on:
+      - run-cypress-tests
+
+  - name: upload-videos
+    image: plugins/s3
+    settings:
+      bucket: cypress
+      region: us-east-1
+      source: cypress/videos/${DRONE_BUILD_NUMBER}/** 
+      target: /drone-videos/${DRONE_BUILD_NUMBER}/
       access_key: 
         from_secret: MINIO_ACCESS_KEY
       secret_key: 
