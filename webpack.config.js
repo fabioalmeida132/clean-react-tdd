@@ -1,6 +1,6 @@
-const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const Dotenv = require('dotenv-webpack')
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   mode: 'development',
@@ -42,8 +42,10 @@ module.exports = {
     historyApiFallback: true,
     devMiddleware: {
       writeToDisk: true
-    }
-
+    },
+    disableHostCheck: true,
+    port: 8080,
+    host: '0.0.0.0'
   },
   externals: {
     react: 'React',
@@ -53,4 +55,4 @@ module.exports = {
     new CleanWebpackPlugin(),
     new Dotenv()
   ]
-}
+};
