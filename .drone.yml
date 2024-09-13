@@ -12,21 +12,19 @@ steps:
       paths:
         - node_modules
 
-  - name: server
-    image: node:21
-    commands:
-      - yarn start & # Inicia o servidor em segundo plano
-      - npx wait-on http://localhost:8080 # Aguarda até que o servidor esteja acessível
-    environment:
-      PORT: 8080
-    depends_on:
-      - install-deps # O servidor só roda após a instalação das dependências
-
   - name: run-cypress-tests
     image: cypress/included:13.14.2
     environment:
-      CYPRESS_baseUrl: http://localhost:8080
+      CYPRESS_baseUrl: http://server:8080 # O Cypress acessa o servidor pelo nome do serviço
     commands:
-      - cypress run # Roda os testes Cypress
+      - cypress run
     depends_on:
-      - server # O Cypress só roda após o servidor estar rodando
+      - server
+
+services:
+  - name: server
+    image: node:21
+    environment:
+      PORT: 8080
+    commands:
+      - yarn start
