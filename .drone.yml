@@ -21,7 +21,7 @@ steps:
       PORT: 8080
     detach: true
 
- - name: wait-for-server
+  - name: wait-for-server
     image: busybox
     commands:
       - sleep 50
@@ -32,8 +32,3 @@ steps:
       CYPRESS_baseUrl: http://localhost:8080
     commands:
       - yarn run cypress run
-
-cache:
-  paths:
-    - /root/.cache/Cypress
-    - node_modules
