@@ -3,23 +3,17 @@ type: docker
 name: default
 
 steps:
-  - name: waiton
-    image: akhenakh/drone-waiton:1.0
-    pull: always
-    settings:
-      globaltimeout: 300s
-      urltimeout: 10s
-      urls:
-        - http://server:8080
-
   - name: run-cypress-tests
     image: cypress/included:13.14.2
     commands:
+      - npm install wait-on # Instala o wait-on via npm
+      - npx wait-on http://server:8080 # Espera o servidor estar acessível
+      - cypress install
       - cypress run
     environment:
       CYPRESS_baseUrl: http://server:8080
     depends_on:
-      - waiton
+      - server
 
 services:
   - name: server
