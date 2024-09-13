@@ -7,7 +7,8 @@ steps:
     image: cypress/included:13.14.2
     environment:
       CYPRESS_baseUrl: http://server:8080
-      REACT_APP_API_URL: http://localhost:5050/api
+      REACT_APP_API_URL:
+        from_secret: REACT_APP_API_URL
     commands:
       - npx wait-on http://server:8080
       - cypress run
@@ -24,8 +25,10 @@ steps:
       region: us-east-1
       source: cypress/screenshots/**/* 
       target: /drone-screenshots/
-      access_key: ${MINIO_ACCESS_KEY}
-      secret_key: ${MINIO_SECRET_KEY}
+      access_key: 
+        from_secret: MINIO_ACCESS_KEY
+      secret_key: 
+        from_secret: MINIO_SECRET_KEY
       endpoint: https://evolution-minio.geoq4d.easypanel.host
       path_style: true
     when:
@@ -38,7 +41,8 @@ services:
     image: node:21
     environment:
       PORT: 8080
-      REACT_APP_API_URL: http://localhost:5050/api
+      REACT_APP_API_URL:
+        from_secret: http://localhost:5050/api
     commands:
       - yarn install
       - yarn start
