@@ -15,7 +15,7 @@ steps:
   - name: run-cypress-tests
     image: cypress/included:13.14.2
     environment:
-      CYPRESS_baseUrl: http://server:8080 # O Cypress acessará o serviço pelo nome do serviço "server"
+      CYPRESS_baseUrl: http://server:8080
     commands:
       - cypress run
     depends_on:
