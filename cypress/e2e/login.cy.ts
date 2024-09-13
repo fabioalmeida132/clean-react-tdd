@@ -9,12 +9,11 @@ function randomize (array: any[]) {
 const baseUrl: string = Cypress.config().baseUrl
 describe('Login', () => {
   beforeEach(() => {
-
-    const baseUrl = Cypress.config('baseUrl')
-    cy.log(`Base URL configurada: ${baseUrl}`) // Logando no Cypress
-    console.log(`Base URL configurada: ${baseUrl}`) // Logando no console
-    
     cy.visit('/login')
+  })
+
+  afterEach(() => {
+    cy.screenshot();
   })
 
   it('Should load with correct initial state', () => {
