@@ -16,10 +16,6 @@ steps:
     image: cypress/included:13.14.2
     commands:
       - cypress install
-    cache:
-      key: cypress-cache
-      paths:
-        - /root/.cache/Cypress
 
   - name: start-application
     image: node:21
@@ -37,12 +33,7 @@ steps:
       CYPRESS_baseUrl: http://localhost:8080
     commands:
       - yarn run cypress run
-    cache:
-      key: cypress-cache
-      paths:
-        - /root/.cache/Cypress
 
 cache:
   paths:
     - node_modules
-    - /root/.cache/Cypress
