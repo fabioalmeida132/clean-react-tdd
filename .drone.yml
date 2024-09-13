@@ -6,15 +6,30 @@ steps:
   - name: run-cypress-tests
     image: cypress/included:13.14.2
     environment:
-      CYPRESS_baseUrl: http://server:8080 # Cypress acessa o servidor pelo nome do serviço
+      CYPRESS_baseUrl: http://server:8080
       REACT_APP_API_URL: http://localhost:5050/api
     commands:
-      - npx wait-on http://server:8080 # Espera o servidor estar acessível
-      - cypress install
-      - sleep 60
+      - npx wait-on http://server:8080
       - cypress run
     depends_on:
       - server
+    artifacts:
+      paths:
+        - cypress/screenshots
+
+  - name: upload-screenshots
+    image: plugins/s3
+    settings:
+      bucket: cypress
+      region: us-east-1
+      source: cypress/screenshots/*
+      target: /drone-screenshots/
+      access_key: ${MINIO_ACCESS_KEY}
+      secret_key: ${MINIO_SECRET_KEY}
+      endpoint: https://evolution-minio.geoq4d.easypanel.host
+      path_style: true
+    when:
+      status: [ success, failure ]
 
 services:
   - name: server
@@ -25,3 +40,5 @@ services:
     commands:
       - yarn install
       - yarn start
+    ports:
+      - 8080:8080
