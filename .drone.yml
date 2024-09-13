@@ -5,13 +5,12 @@ name: default
 steps:
   - name: run-cypress-tests
     image: cypress/included:13.14.2
+    environment:
+      CYPRESS_baseUrl: http://server:8080 # Cypress acessa o servidor pelo nome do serviço
     commands:
-      - yarn add wait-on # Instala o wait-on antes de rodar o comando
       - npx wait-on http://server:8080 # Espera o servidor estar acessível
       - cypress install
       - cypress run
-    environment:
-      CYPRESS_baseUrl: http://server:8080
     depends_on:
       - server
 
