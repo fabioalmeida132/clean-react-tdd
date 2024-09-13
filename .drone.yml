@@ -7,13 +7,14 @@ steps:
     image: node:21
     commands:
       - yarn install
+      - yarn add wait-on # Instala o `wait-on` para garantir que esteja disponível
       - yarn start &
-    detach: true # Inicia o servidor em segundo plano sem bloquear o pipeline
+    detach: true # Inicia o servidor em segundo plano
 
   - name: run-cypress-tests
     image: cypress/included:13.14.2
     commands:
-      - npx wait-on http://localhost:8080 # Aguarda o servidor estar acessível
+      - npx wait-on http://localhost:8080 # Espera o servidor estar acessível
       - cypress run
     environment:
       CYPRESS_baseUrl: http://localhost:8080
