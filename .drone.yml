@@ -21,6 +21,11 @@ steps:
       PORT: 8080
     detach: true
 
+ - name: wait-for-server
+    image: busybox
+    commands:
+      - sleep 50
+
   - name: run-cypress-tests
     image: cypress/included:13.6.3
     environment:
