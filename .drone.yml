@@ -7,24 +7,28 @@ steps:
     image: node:21
     commands:
       - yarn install
+    cache:
+      key: node-modules-cache
+      paths:
+        - node_modules
 
   - name: install-cypress
     image: cypress/included:13.6.3
     commands:
       - cypress install
+    cache:
+      key: cypress-cache
+      paths:
+        - /root/.cache/Cypress
 
   - name: start-application
     image: node:21
     commands:
       - yarn start &
+      - sleep 50
     environment:
       PORT: 8080
     detach: true
-
-  - name: wait-for-server
-    image: busybox
-    commands:
-      - sleep 50
 
   - name: run-cypress-tests
     image: cypress/included:13.6.3
@@ -32,3 +36,12 @@ steps:
       CYPRESS_baseUrl: http://localhost:8080
     commands:
       - yarn run cypress run
+    cache:
+      key: cypress-cache
+      paths:
+        - /root/.cache/Cypress
+
+cache:
+  paths:
+    - node_modules
+    - /root/.cache/Cypress
