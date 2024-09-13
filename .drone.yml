@@ -8,3 +8,8 @@ steps:
     commands:
       - yarn install
       - yarn test
+
+  - name: run-cypress-tests
+    image: cypress/included:12.17.3
+    commands:
+      - yarn run cypress run
