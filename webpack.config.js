@@ -43,7 +43,7 @@ module.exports = {
     devMiddleware: {
       writeToDisk: true
     },
-    disableHostCheck: true,
+    allowedHosts: 'all',
     port: 8080,
     host: '0.0.0.0'
   },
