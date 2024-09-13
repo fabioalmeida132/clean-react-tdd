@@ -3,7 +3,10 @@ type: docker
 name: default
 
 steps:
-  - name: install-dependencies
+  - name: install-deps
+    volumes:
+      - name: cypress-cache
+        path: /root/.cache/Cypress
     image: node:21
     commands:
       - yarn install
@@ -12,43 +15,36 @@ steps:
       paths:
         - node_modules
 
-  - name: clear-cypress-cache
-    image: cypress/included:13.14.2
-    commands:
-      - rm -rf /root/.cache/Cypress
-    depends_on:
-      - install-dependencies
-
-  - name: install-cypress
-    image: cypress/included:13.14.2
-    commands:
-      - cypress install
-    depends_on:
-      - clear-cypress-cache
-
   - name: start-application
+    volumes:
+      - name: cypress-cache
+        path: /root/.cache/Cypress
     image: node:21
     commands:
       - yarn start &
-      - >
-        until curl --output /dev/null --silent --head --fail http://localhost:8080;
-        do echo "Waiting for the server..."; sleep 5;
-        done
-      - echo "Server is running!"
+      - sleep 5
+      - curl --retry 5 --retry-delay 5 --retry-connrefused http://localhost:8080 || echo "Failed to connect to server"
+      - curl http://localhost:8080
+      - echo "Server logs:"
+      - yarn logs
     environment:
       PORT: 8080
     depends_on:
-      - install-cypress
+      - install-deps
 
-  - name: run-cypress-tests
-    image: cypress/included:13.14.2
+  - name: test
+    volumes:
+      - name: cypress-cache
+        path: /root/.cache/Cypress
+    image: cypress/base:13.3.0
+    commands:
+      - yarn run cypress run
     environment:
       CYPRESS_baseUrl: http://localhost:8080
-    commands:
-      - cypress run
     depends_on:
       - start-application
 
-cache:
-  paths:
-    - node_modules
+volumes:
+  - name: cypress-cache
+    host:
+      path: /tmp/cypress-cache
