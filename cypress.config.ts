@@ -6,6 +6,10 @@ dotenv.config();
 export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:8080',
+    video: true,
+    screenshotOnRunFailure: true,
+    screenshotsFolder: 'cypress/screenshots',
+    videosFolder: 'cypress/videos',
     setupNodeEvents(on, config) {
       on('task', {
         log(message) {
