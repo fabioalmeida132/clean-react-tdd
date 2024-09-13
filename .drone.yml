@@ -13,7 +13,7 @@ steps:
         - node_modules
 
   - name: install-cypress
-    image: cypress/included:13.6.3
+    image: cypress/included:13.14.2
     commands:
       - cypress install
     cache:
@@ -25,12 +25,11 @@ steps:
     image: node:21
     commands:
       - yarn start &
-      - sleep 60
+      - sleep 50
       - curl --retry 6 --retry-delay 5 --retry-connrefused http://localhost:8080 || echo "Failed to connect to server"
       - echo "Server is running"
     environment:
       PORT: 8080
-    detach: true
 
   - name: run-cypress-tests
     image: cypress/included:13.14.2
