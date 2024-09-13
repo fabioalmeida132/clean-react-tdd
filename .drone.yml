@@ -3,28 +3,28 @@ type: docker
 name: default
 
 steps:
-  - name: install-and-start-server
+  - name: install-deps
     image: node:21
     commands:
       - yarn install
-      - yarn add wait-on # Instala o `wait-on` para garantir que esteja disponível
-      - yarn start &
-    detach: true # Inicia o servidor em segundo plano
     cache:
       key: node-modules-cache
       paths:
-        - node_modules # Cache para as dependências do Node.js
+        - node_modules
 
   - name: run-cypress-tests
     image: cypress/included:13.14.2
-    commands:
-      - npx wait-on http://localhost:8080 # Espera o servidor estar acessível
-      - cypress run
     environment:
-      CYPRESS_baseUrl: http://localhost:8080
+      CYPRESS_baseUrl: http://server:8080 # O Cypress acessa o servidor pelo nome do serviço
+    commands:
+      - cypress run
     depends_on:
-      - install-and-start-server
+      - server
 
-cache:
-  paths:
-    - node_modules # Mantém o cache para o `node_modules`
+services:
+  - name: server
+    image: node:21
+    environment:
+      PORT: 8080
+    commands:
+      - yarn start
