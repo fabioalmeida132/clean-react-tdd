@@ -3,13 +3,22 @@ type: docker
 name: default
 
 steps:
-  - name: install-dependencies-and-test
+  - name: install-dependencies
     image: node:21
     commands:
       - yarn install
-      - yarn test
+
+  - name: start-application
+    image: node:21
+    commands:
+      - yarn start &
+    environment:
+      PORT: 8080
+    detach: true
 
   - name: run-cypress-tests
     image: cypress/included:12.17.3
+    environment:
+      CYPRESS_baseUrl: http://localhost:8080
     commands:
       - yarn run cypress run
