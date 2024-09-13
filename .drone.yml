@@ -8,6 +8,11 @@ steps:
     commands:
       - yarn install
 
+  - name: install-cypress
+    image: cypress/included:13.6.3
+    commands:
+      - cypress install
+
   - name: start-application
     image: node:21
     commands:
@@ -17,8 +22,13 @@ steps:
     detach: true
 
   - name: run-cypress-tests
-    image: cypress/included:12.17.3
+    image: cypress/included:13.6.3
     environment:
       CYPRESS_baseUrl: http://localhost:8080
     commands:
       - yarn run cypress run
+
+cache:
+  paths:
+    - /root/.cache/Cypress
+    - node_modules
