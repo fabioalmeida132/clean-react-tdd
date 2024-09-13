@@ -3,24 +3,14 @@ type: docker
 name: default
 
 steps:
-  - name: install-deps
-    image: node:21
-    commands:
-      - yarn install
-      - yarn add ts-node typescript @types/node # Instala ts-node e TypeScript para suporte ao arquivo .ts
-    cache:
-      key: node-modules-cache
-      paths:
-        - node_modules
-
   - name: run-cypress-tests
     image: cypress/included:13.14.2
-    commands:
-      - npx ts-node --esm node_modules/.bin/cypress run # Usa ts-node para rodar o Cypress com suporte a TypeScript
     environment:
-      CYPRESS_baseUrl: http://server:8080
+      CYPRESS_baseUrl: http://server:8080 # Cypress acessa o servidor pelo nome do serviço
+    commands:
+      - cypress run
     depends_on:
-      - install-deps
+      - server
 
 services:
   - name: server
