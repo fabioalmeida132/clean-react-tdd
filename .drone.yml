@@ -6,7 +6,7 @@ steps:
   - name: run-cypress-tests
     image: cypress/included:13.14.2
     commands:
-      - npm install wait-on # Instala o wait-on via npm
+      - yarn add wait-on # Instala o wait-on antes de rodar o comando
       - npx wait-on http://server:8080 # Espera o servidor estar acessível
       - cypress install
       - cypress run
