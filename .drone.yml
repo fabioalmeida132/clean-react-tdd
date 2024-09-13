@@ -4,9 +4,6 @@ name: default
 
 steps:
   - name: install-deps
-    volumes:
-      - name: cypress-cache
-        path: /root/.cache/Cypress
     image: node:21
     commands:
       - yarn install
@@ -15,36 +12,19 @@ steps:
       paths:
         - node_modules
 
-  - name: start-application
-    volumes:
-      - name: cypress-cache
-        path: /root/.cache/Cypress
-    image: node:21
+  - name: run-cypress-tests
+    image: cypress/included:13.14.2
+    environment:
+      CYPRESS_baseUrl: http://server:8080 # O Cypress acessará o serviço pelo nome do serviço "server"
     commands:
-      - yarn start &
-      - sleep 5
-      - curl --retry 5 --retry-delay 5 --retry-connrefused http://localhost:8080 || echo "Failed to connect to server"
-      - curl http://localhost:8080
-      - echo "Server logs:"
-      - yarn logs
+      - cypress run
+    depends_on:
+      - server
+
+services:
+  - name: server
+    image: node:21
     environment:
       PORT: 8080
-    depends_on:
-      - install-deps
-
-  - name: test
-    volumes:
-      - name: cypress-cache
-        path: /root/.cache/Cypress
-    image: cypress/base:13.3.0
     commands:
-      - yarn run cypress run
-    environment:
-      CYPRESS_baseUrl: http://localhost:8080
-    depends_on:
-      - start-application
-
-volumes:
-  - name: cypress-cache
-    host:
-      path: /tmp/cypress-cache
+      - yarn start
