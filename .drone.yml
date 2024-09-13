@@ -8,6 +8,7 @@ steps:
     environment:
       CYPRESS_baseUrl: http://server:8080 # Cypress acessa o servidor pelo nome do serviço
     commands:
+      - cypress install
       - cypress run
     depends_on:
       - server
