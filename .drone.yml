@@ -19,6 +19,7 @@ services:
     image: node:21
     environment:
       PORT: 8080
+      REACT_APP_API_URL: http://localhost:5050/api
     commands:
       - yarn install
       - yarn start
