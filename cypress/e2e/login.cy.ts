@@ -9,7 +9,11 @@ function randomize (array: any[]) {
 const baseUrl: string = Cypress.config().baseUrl
 describe('Login', () => {
   beforeEach(() => {
-    cy.visit('login')
+    cy.visit('/login')
+
+     cy.intercept('POST', /login/, (req) => {
+      console.log(`URL chamada: ${req.url}`)
+    }).as('loginRequest')
   })
 
   it('Should load with correct initial state', () => {
