@@ -1,4 +1,4 @@
-import {defineConfig} from 'cypress'
+import { defineConfig } from 'cypress';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -9,9 +9,11 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       on('task', {
         log(message) {
-          console.log(message)
-          return null
+          console.log(message);
+          return null;
         },
-      })
-  }
-})
+      });
+      return config;
+    },
+  },
+});
