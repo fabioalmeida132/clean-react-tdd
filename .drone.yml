@@ -15,14 +15,14 @@ steps:
       - server
     artifacts:
       paths:
-        - cypress/screenshots
+        - cypress/screenshots/**/*
 
   - name: upload-screenshots
     image: plugins/s3
     settings:
       bucket: cypress
       region: us-east-1
-      source: cypress/screenshots/*
+      source: cypress/screenshots/**/* 
       target: /drone-screenshots/
       access_key: ${MINIO_ACCESS_KEY}
       secret_key: ${MINIO_SECRET_KEY}
@@ -30,6 +30,8 @@ steps:
       path_style: true
     when:
       status: [ success, failure ]
+    depends_on:
+      - run-cypress-tests
 
 services:
   - name: server
