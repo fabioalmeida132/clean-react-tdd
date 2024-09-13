@@ -11,6 +11,7 @@ steps:
     commands:
       - npx wait-on http://server:8080 # Espera o servidor estar acessível
       - cypress install
+      - sleep 60
       - cypress run
     depends_on:
       - server
