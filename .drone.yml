@@ -10,6 +10,10 @@ steps:
       - yarn add wait-on # Instala o `wait-on` para garantir que esteja disponível
       - yarn start &
     detach: true # Inicia o servidor em segundo plano
+    cache:
+      key: node-modules-cache
+      paths:
+        - node_modules # Cache para as dependências do Node.js
 
   - name: run-cypress-tests
     image: cypress/included:13.14.2
@@ -20,3 +24,7 @@ steps:
       CYPRESS_baseUrl: http://localhost:8080
     depends_on:
       - install-and-start-server
+
+cache:
+  paths:
+    - node_modules # Mantém o cache para o `node_modules`
